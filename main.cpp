@@ -60,38 +60,32 @@ int main()
                 int liczba;
                 cout<<"Wprowadz na ktory indeks wstawic liczbe: ";
                 cin>>indx;
+                if(indx>n){
+                    cout << "Podany indeks jest wiekszy niz rozmiar tablicy." << endl;
+                break;
+                }
                 cout <<"podaj liczbe do wstawienia: ";
                 cin>>liczba;
-                if(p != NULL)
-                {
-                    for(int i=0;i<n;i++)
-                    {
-                        tmp[i] = p[i];
-                    }
-
-                    delete[] p;
-
-                }
-
-                p = tmp; //przekopiuj adres nowej tablicy do wskaźnika p
-                n++;
-                for(int j = indx-1;j<n;j++){
-                    p[j+1] = p[j];
-                }
+                for (int i = n - 1; i >= indx; i--) {
+                p[i + 1] = p[i];
+            }
                 p[indx] = liczba;
-
-                break;
+            n++;
+            break;
             }
         case 3:
             {
                 int ind;
                 cout<<"Wprowadz indeks ktory chcesz zwolnic: ";
                 cin>>ind;
-                for(int j = ind;j<n;j++){
-                    p[j] = p[j+1];
+                if (ind >= n) {
+                
+                cout << "Podana pozycja jest wieksza niz rozmiar tablicy." << endl;
+                            }       
+                for (int i = ind; i < n - 1; i++) {
+                    p[i] = p[i + 1];
                 }
-                p[sizeof(p)-1] = 1;
-                //usuwanie dowolnego elementu (po indeksie)
+                n--;
                 break;
             }
         case 4:
@@ -107,12 +101,56 @@ int main()
         case 5:
             {
                 //zapis danych do pliku
-                break;
+                {
+                cout << "Podaj sciezke dostepu do pliku: ";
+                string sciezka;
+                cin >> sciezka;
+                ifstream fin(sciezka,ios::app);
+                if (!fin.is_open()) {
+                    cout << "Nie mozna otworzyc pliku." << endl;
+                    break;  
+                }
+                int rozmiar;
+                fin >> rozmiar;
+                delete[] p;
+                p = new int[rozmiar];
+                for (int i = 0; i < rozmiar; i++) {
+                    fin >> p[i];
+                }
+                n = rozmiar;
+                cout << "Tablica zostala wczytana z pliku." << endl;
+                fin.close();
+            break;
+            }
             }
         case 6:
             {
-                //wczytanie danych z pliku
-                break;
+                {
+            cout<<"Podaj sciezke pliku do ktorego chcesz zapisac tablice: "<<endl;
+            string sciezka;
+            cin>>sciezka;
+            ofstream fout(sciezka,ios::out|ios::trunc);
+            if(!fout.is_open())
+            {
+                cout << "Nie mozna otworzyc pliku." << endl;
+                break; 
+            }
+            if(p==NULL)
+            {
+                cout<<"Nie mozna zapisac pustej tablicy.";
+            }
+            else
+            {
+                fout<<n<<endl;
+                for(int i=0; i<n;i++)
+                {
+                    fout<<p[i]<<" ";
+                }
+                cout<<"Pomyslne zapisano tablice do pliku.";
+            } 
+            fout.close();
+            break;
+            }
             }
         default:
             {
